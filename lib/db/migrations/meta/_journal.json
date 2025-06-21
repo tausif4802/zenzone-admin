@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1750503629075,
+      "tag": "0000_sloppy_ares",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750505014911,
+      "tag": "0001_shallow_mandroid",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750507157060,
+      "tag": "0002_glorious_rhodey",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1750507910044,
+      "tag": "0003_fuzzy_warpath",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1750514309633,
+      "tag": "0004_shallow_genesis",
+      "breakpoints": true
+    }
+  ]
+}
