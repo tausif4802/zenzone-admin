@@ -4,7 +4,37 @@ import { users } from '@/lib/db/schema';
 import { and, desc, eq, like, or } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Get all users (admin only)
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     tags: [Users]
+ *     summary: Get all users
+ *     description: Retrieve all users with optional search functionality
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term for users (searches in name and email)
+ *     responses:
+ *       200:
+ *         description: List of users retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Server error
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

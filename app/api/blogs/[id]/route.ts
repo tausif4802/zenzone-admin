@@ -3,7 +3,40 @@ import { blogs } from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET /api/blogs/[id] - Get a specific blog
+/**
+ * @swagger
+ * /api/blogs/{id}:
+ *   get:
+ *     tags: [Blogs]
+ *     summary: Get a specific blog
+ *     description: Retrieve a blog by its ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The blog ID
+ *     responses:
+ *       200:
+ *         description: Blog retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 blog:
+ *                   $ref: '#/components/schemas/Blog'
+ *       400:
+ *         description: Invalid blog ID
+ *       404:
+ *         description: Blog not found
+ *       500:
+ *         description: Server error
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -44,7 +77,62 @@ export async function GET(
   }
 }
 
-// PUT /api/blogs/[id] - Update a specific blog
+/**
+ * @swagger
+ * /api/blogs/{id}:
+ *   put:
+ *     tags: [Blogs]
+ *     summary: Update a blog
+ *     description: Update an existing blog by its ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The blog ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The blog title
+ *               description:
+ *                 type: string
+ *                 description: Short description of the blog
+ *               body:
+ *                 type: string
+ *                 description: The main content of the blog
+ *               imageUrl:
+ *                 type: string
+ *                 description: URL of the blog's featured image
+ *               isFeatured:
+ *                 type: boolean
+ *                 description: Whether the blog is featured
+ *     responses:
+ *       200:
+ *         description: Blog updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 blog:
+ *                   $ref: '#/components/schemas/Blog'
+ *       400:
+ *         description: Invalid request body or blog ID
+ *       404:
+ *         description: Blog not found
+ *       500:
+ *         description: Server error
+ */
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -103,7 +191,43 @@ export async function PUT(
   }
 }
 
-// DELETE /api/blogs/[id] - Soft delete a specific blog
+/**
+ * @swagger
+ * /api/blogs/{id}:
+ *   delete:
+ *     tags: [Blogs]
+ *     summary: Delete a blog
+ *     description: Soft delete a blog by its ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The blog ID
+ *     responses:
+ *       200:
+ *         description: Blog deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Blog deleted successfully
+ *                 blog:
+ *                   $ref: '#/components/schemas/Blog'
+ *       400:
+ *         description: Invalid blog ID
+ *       404:
+ *         description: Blog not found
+ *       500:
+ *         description: Server error
+ */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

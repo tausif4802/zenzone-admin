@@ -2,11 +2,67 @@ import { createUser, emailExists } from '@/lib/auth-drizzle';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+/**
+ * @swagger
+ * /api/auth/signup:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Register new user
+ *     description: Create a new user account
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: User's password (min 8 characters)
+ *               name:
+ *                 type: string
+ *                 description: User's full name
+ *               phone:
+ *                 type: string
+ *                 description: User's phone number
+ *               address:
+ *                 type: string
+ *                 description: User's address
+ *     responses:
+ *       200:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User created successfully
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid request body or email already exists
+ *       500:
+ *         description: Server error
+ */
+
 const signupSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  role: z.enum(['admin', 'user']).optional().default('user'),
+  name: z.string().min(1, 'Name is required'),
   phone: z.string().optional(),
   address: z.string().optional(),
 });
@@ -27,7 +83,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, password, name, role, phone, address } = validation.data;
+    const { email, password, name, phone, address } = validation.data;
 
     // Check if email already exists
     const exists = await emailExists(email);
@@ -43,7 +99,6 @@ export async function POST(request: NextRequest) {
       email,
       password,
       name,
-      role,
       phone,
       address,
     });
@@ -55,7 +110,6 @@ export async function POST(request: NextRequest) {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role,
         phone: user.phone,
         address: user.address,
       },

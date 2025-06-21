@@ -3,7 +3,40 @@ import { breathingGuides } from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET /api/breathing-guides/[id] - Get a specific breathing guide
+/**
+ * @swagger
+ * /api/breathing-guides/{id}:
+ *   get:
+ *     tags: [Breathing Guides]
+ *     summary: Get a specific breathing guide
+ *     description: Retrieve a breathing guide by its ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The breathing guide ID
+ *     responses:
+ *       200:
+ *         description: Breathing guide retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 guide:
+ *                   $ref: '#/components/schemas/BreathingGuide'
+ *       400:
+ *         description: Invalid breathing guide ID
+ *       404:
+ *         description: Breathing guide not found
+ *       500:
+ *         description: Server error
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -49,7 +82,68 @@ export async function GET(
   }
 }
 
-// PUT /api/breathing-guides/[id] - Update a specific breathing guide
+/**
+ * @swagger
+ * /api/breathing-guides/{id}:
+ *   put:
+ *     tags: [Breathing Guides]
+ *     summary: Update a breathing guide
+ *     description: Update an existing breathing guide by its ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The breathing guide ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               serial:
+ *                 type: integer
+ *                 description: Unique serial number for the guide
+ *               title:
+ *                 type: string
+ *                 description: The guide title
+ *               guide:
+ *                 type: string
+ *                 description: The breathing exercise instructions
+ *               description:
+ *                 type: string
+ *                 description: Short description of the guide
+ *               audioUrl:
+ *                 type: string
+ *                 description: URL of the guide's audio file
+ *               duration:
+ *                 type: integer
+ *                 description: Duration of the exercise in seconds
+ *               isFeatured:
+ *                 type: boolean
+ *                 description: Whether the guide is featured
+ *     responses:
+ *       200:
+ *         description: Breathing guide updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 guide:
+ *                   $ref: '#/components/schemas/BreathingGuide'
+ *       400:
+ *         description: Invalid request body or breathing guide ID
+ *       404:
+ *         description: Breathing guide not found
+ *       500:
+ *         description: Server error
+ */
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -148,7 +242,43 @@ export async function PUT(
   }
 }
 
-// DELETE /api/breathing-guides/[id] - Soft delete a specific breathing guide
+/**
+ * @swagger
+ * /api/breathing-guides/{id}:
+ *   delete:
+ *     tags: [Breathing Guides]
+ *     summary: Delete a breathing guide
+ *     description: Soft delete a breathing guide by its ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The breathing guide ID
+ *     responses:
+ *       200:
+ *         description: Breathing guide deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Breathing guide deleted successfully
+ *                 guide:
+ *                   $ref: '#/components/schemas/BreathingGuide'
+ *       400:
+ *         description: Invalid breathing guide ID
+ *       404:
+ *         description: Breathing guide not found
+ *       500:
+ *         description: Server error
+ */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

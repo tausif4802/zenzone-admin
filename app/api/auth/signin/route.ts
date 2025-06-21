@@ -2,6 +2,55 @@ import { authenticateUser } from '@/lib/auth-drizzle';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+/**
+ * @swagger
+ * /api/auth/signin:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Sign in user
+ *     description: Authenticate a user with email and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: User's password
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Authentication successful
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid request body
+ *       401:
+ *         description: Invalid email or password
+ *       500:
+ *         description: Server error
+ */
+
 const signinSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
@@ -60,3 +109,40 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The user ID
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: User's email address
+ *         name:
+ *           type: string
+ *           description: User's full name
+ *         role:
+ *           type: string
+ *           enum: [user, admin]
+ *           description: User's role
+ *         phone:
+ *           type: string
+ *           description: User's phone number
+ *         address:
+ *           type: string
+ *           description: User's address
+ *         lastWatched:
+ *           type: string
+ *           format: date-time
+ *           description: Last watched content timestamp
+ *         lastRead:
+ *           type: string
+ *           format: date-time
+ *           description: Last read content timestamp
+ */

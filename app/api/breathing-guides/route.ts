@@ -3,7 +3,47 @@ import { breathingGuides } from '@/lib/db/schema';
 import { and, desc, eq, like, or } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET /api/breathing-guides - Get all breathing guides (non-deleted) with search support
+/**
+ * @swagger
+ * /api/breathing-guides:
+ *   get:
+ *     tags: [Breathing Guides]
+ *     summary: Get all breathing guides
+ *     description: Retrieve all breathing guides with optional filtering for featured and deleted items, and search functionality
+ *     parameters:
+ *       - in: query
+ *         name: featured
+ *         schema:
+ *           type: boolean
+ *         description: Filter for featured guides
+ *       - in: query
+ *         name: deleted
+ *         schema:
+ *           type: boolean
+ *         description: Include deleted guides
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term for guides (searches in title, description, and guide content)
+ *     responses:
+ *       200:
+ *         description: List of breathing guides retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 breathingGuides:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/BreathingGuide'
+ *       500:
+ *         description: Server error
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -66,7 +106,64 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/breathing-guides - Create a new breathing guide
+/**
+ * @swagger
+ * /api/breathing-guides:
+ *   post:
+ *     tags: [Breathing Guides]
+ *     summary: Create a new breathing guide
+ *     description: Create a new breathing guide with the provided details
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - serial
+ *               - title
+ *               - guide
+ *               - description
+ *             properties:
+ *               serial:
+ *                 type: integer
+ *                 description: Unique serial number for the guide
+ *               title:
+ *                 type: string
+ *                 description: The guide title
+ *               guide:
+ *                 type: string
+ *                 description: The breathing exercise instructions
+ *               description:
+ *                 type: string
+ *                 description: Short description of the guide
+ *               audioUrl:
+ *                 type: string
+ *                 description: URL of the guide's audio file
+ *               duration:
+ *                 type: integer
+ *                 description: Duration of the exercise in seconds
+ *               isFeatured:
+ *                 type: boolean
+ *                 description: Whether the guide is featured
+ *     responses:
+ *       200:
+ *         description: Breathing guide created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 guide:
+ *                   $ref: '#/components/schemas/BreathingGuide'
+ *       400:
+ *         description: Invalid request body or duplicate serial number
+ *       500:
+ *         description: Server error
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -136,3 +233,51 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BreathingGuide:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The guide ID
+ *         serial:
+ *           type: integer
+ *           description: Unique serial number for the guide
+ *         title:
+ *           type: string
+ *           description: The guide title
+ *         guide:
+ *           type: string
+ *           description: The breathing exercise instructions
+ *         description:
+ *           type: string
+ *           description: Short description of the guide
+ *         audioUrl:
+ *           type: string
+ *           description: URL of the guide's audio file
+ *         duration:
+ *           type: integer
+ *           description: Duration of the exercise in seconds
+ *         isFeatured:
+ *           type: boolean
+ *           description: Whether the guide is featured
+ *         isDeleted:
+ *           type: boolean
+ *           description: Whether the guide is deleted
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Creation timestamp
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: Last update timestamp
+ *         deletedAt:
+ *           type: string
+ *           format: date-time
+ *           description: Deletion timestamp
+ */

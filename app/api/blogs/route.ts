@@ -3,7 +3,47 @@ import { blogs } from '@/lib/db/schema';
 import { and, desc, eq, like, or } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET /api/blogs - Get all blogs (non-deleted) with search support
+/**
+ * @swagger
+ * /api/blogs:
+ *   get:
+ *     tags: [Blogs]
+ *     summary: Get all blogs
+ *     description: Retrieve all blogs with optional filtering for featured and deleted items, and search functionality
+ *     parameters:
+ *       - in: query
+ *         name: featured
+ *         schema:
+ *           type: boolean
+ *         description: Filter for featured blogs
+ *       - in: query
+ *         name: deleted
+ *         schema:
+ *           type: boolean
+ *         description: Include deleted blogs
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term for blogs
+ *     responses:
+ *       200:
+ *         description: List of blogs retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 blogs:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Blog'
+ *       500:
+ *         description: Server error
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -58,7 +98,57 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/blogs - Create a new blog
+/**
+ * @swagger
+ * /api/blogs:
+ *   post:
+ *     tags: [Blogs]
+ *     summary: Create a new blog
+ *     description: Create a new blog post with the provided details
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - body
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The blog title
+ *               description:
+ *                 type: string
+ *                 description: Short description of the blog
+ *               body:
+ *                 type: string
+ *                 description: The main content of the blog
+ *               imageUrl:
+ *                 type: string
+ *                 description: URL of the blog's featured image
+ *               isFeatured:
+ *                 type: boolean
+ *                 description: Whether the blog is featured
+ *     responses:
+ *       200:
+ *         description: Blog created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 blog:
+ *                   $ref: '#/components/schemas/Blog'
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Server error
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -97,3 +187,45 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Blog:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The blog ID
+ *         title:
+ *           type: string
+ *           description: The blog title
+ *         description:
+ *           type: string
+ *           description: Short description of the blog
+ *         body:
+ *           type: string
+ *           description: The main content of the blog
+ *         imageUrl:
+ *           type: string
+ *           description: URL of the blog's featured image
+ *         isFeatured:
+ *           type: boolean
+ *           description: Whether the blog is featured
+ *         isDeleted:
+ *           type: boolean
+ *           description: Whether the blog is deleted
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Creation timestamp
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: Last update timestamp
+ *         deletedAt:
+ *           type: string
+ *           format: date-time
+ *           description: Deletion timestamp
+ */
