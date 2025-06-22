@@ -37,6 +37,7 @@ export const createUser = async (userData: CreateUserData): Promise<User> => {
     passwordHash,
     name: userData.name,
     role: userData.role || 'user',
+    status: 'regular',
     phone: userData.phone || null,
     address: userData.address || null,
   };

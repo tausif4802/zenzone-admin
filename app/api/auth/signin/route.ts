@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
         email: user.email,
         name: user.name,
         role: user.role,
+        status: user.status,
         phone: user.phone,
         address: user.address,
         lastWatched: user.lastWatched,
@@ -131,6 +132,10 @@ export async function POST(request: NextRequest) {
  *           type: string
  *           enum: [user, admin]
  *           description: User's role
+ *         status:
+ *           type: string
+ *           enum: [regular, premium]
+ *           description: User's status
  *         phone:
  *           type: string
  *           description: User's phone number
